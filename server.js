@@ -14,7 +14,8 @@ const PORT = process.env.PORT || 3000
 const JWT_SECRET = process.env.JWT_SECRET || 'ladelogistik-secret-key-change-in-production'
 
 // Database setup
-const db = new Database(join(__dirname, 'data.db'))
+const dataDir = process.env.DATA_DIR || __dirname
+const db = new Database(join(dataDir, 'data.db'))
 db.pragma('journal_mode = WAL')
 
 db.exec(`
