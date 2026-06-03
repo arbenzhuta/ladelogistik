@@ -1,11 +1,11 @@
-const CACHE_NAME = 'ladelogistik-v11'
+const CACHE_NAME = 'ladelogistik-v12'
 
 const PRECACHE_URLS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon-192x192.png',
-  '/icon-512x512.png',
+  './',
+  './index.html',
+  './manifest.json',
+  './icon-192x192.png',
+  './icon-512x512.png',
 ]
 
 self.addEventListener('install', (event) => {
@@ -43,6 +43,6 @@ self.addEventListener('fetch', (event) => {
         }
         return response
       })
-      .catch(() => caches.match(event.request) || caches.match('/index.html'))
+      .catch(() => caches.match(event.request) || caches.match('./index.html'))
   )
 })
