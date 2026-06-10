@@ -83,7 +83,7 @@ export default function Frachtstuecke({
       const totalStk = articles.reduce((sum, a) => sum + a.anzahl, 0)
       setImportStatus({
         type: 'success',
-        message: `${file.name}: ${articles.length} Artikel (${totalStk} Stück) importiert:\n${articles.map((a) => `• ${a.name} — Menge: ${a.anzahl}`).join('\n')}`,
+        message: `${file.name}: ${articles.length} Artikel (${totalStk} Stück) importiert:\n${articles.map((a) => `• ${a.pos ? a.pos + ' ' : ''}${a.name} — Menge: ${a.anzahl}`).join('\n')}`,
       })
     } catch (err) {
       setImportStatus({ type: 'error', message: `Import-Fehler: ${err.message}` })
@@ -362,6 +362,18 @@ export default function Frachtstuecke({
                       />
                       <div className="fracht-details">
                         <h3>
+                          {f.pos && (
+                            <span style={{
+                              display: 'inline-block',
+                              background: '#1a56db',
+                              color: '#fff',
+                              borderRadius: 6,
+                              padding: '1px 7px',
+                              fontSize: '0.78rem',
+                              fontWeight: 700,
+                              marginRight: 8,
+                            }}>{f.pos}</span>
+                          )}
                           {f.name}
                           <span className="fracht-typ-badge">{f.typ === 'kanal' ? 'Kanal' : f.typ === 'spiro' ? 'Spiro' : 'Konus'}</span>
                         </h3>

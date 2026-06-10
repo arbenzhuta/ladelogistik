@@ -189,6 +189,14 @@ function detectArticleType(strings) {
   return null
 }
 
+function findPos(strings) {
+  for (const s of strings) {
+    const t = s.text.trim()
+    if (/^Fo\d+[A-Za-z*]?$/.test(t)) return t
+  }
+  return ''
+}
+
 function findArticleName(strings, articleType) {
   if (articleType.type === 'spiro') {
     for (const s of strings) {
@@ -249,6 +257,7 @@ function parseSimpleMAJ(data, sectionStarts) {
     const articleType = detectArticleType(strings)
     if (!articleType) continue
     const name = findArticleName(strings, articleType)
+    const pos = findPos(strings)
 
     const menge = findMenge(data, start, end, articleType.type)
     const dimGroups = findConsecutiveDimensions(data, start, end)
@@ -343,6 +352,7 @@ function parseSimpleMAJ(data, sectionStarts) {
     }
 
     if (article) {
+      if (pos) article.pos = pos
       article.farbe = FARBEN[articles.length % FARBEN.length]
       articles.push(article)
     }
