@@ -179,6 +179,11 @@ function detectArticleType(strings) {
     }
   }
   for (const s of strings) {
+    if (s.text.startsWith('Kanal-cut')) {
+      return { type: 'kanal_cut', name: 'Kanal-cut' }
+    }
+  }
+  for (const s of strings) {
     if (s.text.startsWith('Kanal')) return { type: 'kanal', name: 'Kanal' }
   }
   return null
@@ -195,6 +200,9 @@ function findArticleName(strings, articleType) {
   }
   if (articleType.type === 'schalldaempfer') {
     return 'Schalldämpfer'
+  }
+  if (articleType.type === 'kanal_cut') {
+    return 'Kanal-cut'
   }
   if (articleType.type === 'kanal') {
     return 'Kanal'
@@ -306,6 +314,32 @@ function parseSimpleMAJ(data, sectionStarts) {
         }
       }
       article = { typ: articleType.type === 'schalldaempfer' ? 'kanal' : 'kanal', name: name, a, b, L, anzahl: menge }
+    } else if (articleType.type === 'kanal_cut') {
+      // Kanal-cut: the three consecutive dimensions are stored in order as
+      // A, B, L (a=A x B, b=A1 x B1, L=L/Grad). Unlike a regular Kanal, L is
+      // NOT the largest value, so take the values in order without sorting.
+      let a = 0,
+        b = 0,
+        L = 0
+      for (const group of dimGroups) {
+        if (
+          group.length >= 3 &&
+          group[0].val >= 50 &&
+          group[1].val >= 50 &&
+          group[2].val >= 50
+        ) {
+          a = group[0].val
+          b = group[1].val
+          L = group[2].val
+          break
+        }
+      }
+      if (a === 0) {
+        a = 600
+        b = 300
+        L = 200
+      }
+      article = { typ: 'kanal', name: name, a, b, L, anzahl: menge }
     }
 
     if (article) {
